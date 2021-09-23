@@ -28,7 +28,7 @@ func getTextFrequency(text string) (result []wordFrequency) {
 	for _, word := range strings.Fields(text) {
 		processedWord, err := processWord(word)
 		if err == nil {
-			frequencyMap[processedWord] += 1
+			frequencyMap[processedWord]++
 		}
 	}
 	for key, value := range frequencyMap {
