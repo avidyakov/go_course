@@ -11,14 +11,14 @@ type wordFrequency struct {
 	count int
 }
 
-var emptyWord = errors.New("empty word")
+var errEmptyWord = errors.New("empty word")
 
 func processWord(rawWord string) (string, error) {
 	rawWord = strings.Trim(rawWord, ",.-")
 	rawWord = strings.ToLower(rawWord)
 
 	if len(rawWord) == 0 {
-		return "", emptyWord
+		return "", errEmptyWord
 	}
 	return rawWord, nil
 }
