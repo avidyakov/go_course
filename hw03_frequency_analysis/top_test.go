@@ -7,7 +7,7 @@ import (
 )
 
 // Change to true if needed.
-var taskWithAsteriskIsCompleted = false
+var taskWithAsteriskIsCompleted = true
 
 var text = `Как видите, он  спускается  по  лестнице  вслед  за  своим
 	другом   Кристофером   Робином,   головой   вниз,  пересчитывая
@@ -79,4 +79,118 @@ func TestTop10(t *testing.T) {
 			require.Equal(t, expected, Top10(text))
 		}
 	})
+}
+
+func TestProcessWord(t *testing.T) {
+	tests := []struct {
+		testInput     string
+		expected      string
+		expectedError error
+	}{
+		{".,.-test-,.", "test", nil},
+		{"-", "", errEmptyWord},
+	}
+
+	for _, test := range tests {
+		testResult, err := processWord(test.testInput)
+		require.Equal(t, testResult, test.expected)
+		require.Equal(t, err, test.expectedError)
+	}
+
+}
+
+func TestGetTestFrequency(t *testing.T) {
+	tests := []struct {
+		testInput string
+		expected  []wordFrequency
+	}{
+		{
+			"test test test",
+			[]wordFrequency{
+				{
+					word:  "test",
+					count: 3,
+				},
+			},
+		},
+		{
+			"adipiscing elit, test test,- -,test",
+			[]wordFrequency{
+				{
+					word:  "adipiscing",
+					count: 1,
+				},
+				{
+					word:  "elit",
+					count: 1,
+				},
+				{
+					word:  "test",
+					count: 3,
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		testResult := getTextFrequency(test.testInput)
+		require.Equal(t, testResult, test.expected)
+	}
+}
+
+func TestSortFrequency(t *testing.T) {
+	tests := []struct {
+		testInput []wordFrequency
+		expected  []wordFrequency
+	}{
+		{
+			[]wordFrequency{
+				{
+					word:  "second",
+					count: 1,
+				},
+				{
+					word:  "first",
+					count: 2,
+				},
+			},
+			[]wordFrequency{
+				{
+					word:  "first",
+					count: 2,
+				},
+				{
+					word:  "second",
+					count: 1,
+				},
+			},
+		},
+		{
+			[]wordFrequency{
+				{
+					word:  "second",
+					count: 1,
+				},
+				{
+					word:  "first",
+					count: 1,
+				},
+			},
+			[]wordFrequency{
+				{
+					word:  "first",
+					count: 1,
+				},
+				{
+					word:  "second",
+					count: 1,
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		sortFrequency(test.testInput)
+		require.Equal(t, test.testInput, test.expected)
+	}
 }
